@@ -8,23 +8,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.phonenumberFragment">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
+    <ListView
+        android:id="@+id/listview1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:scrollbarFadeDuration="0"
-        android:scrollbarSize="5dp"
-        android:scrollbarThumbVertical="@android:color/darker_gray"
-        android:scrollbars="vertical" />
-
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="8"
-        android:text='추가'
-        />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
