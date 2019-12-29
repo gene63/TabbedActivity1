@@ -32,8 +32,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         if (position==0)
             return phonenumberFragment.newInstance(position+1);
-        /*else if (position==1)
-            return new tab2Fragment();
+        else if (position==1)
+            return galleryFragment.newInstance(position+2);
+        /*
         else
             return new tab3Fragment();
          */

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">TabbedActivity1</string>
     <string name="tab_text_1">Phone Number</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_2">Image Gallery</string>
     <string name="tab_text_3">Tab 3</string>
+    <string name="folderName">Folder Name</string>
+    <string name="appName">Tabbed Activity1</string>
+    <string name="empty">No Images on this device</string>
 </resources>
