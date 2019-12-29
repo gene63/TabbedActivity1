@@ -6,4 +6,5 @@
     <string name="folderName">Folder Name</string>
     <string name="appName">Tabbed Activity1</string>
     <string name="empty">No Images on this device</string>
+    <string name="btitle">Load Contacts</string>
 </resources>
