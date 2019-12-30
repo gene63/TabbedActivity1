@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.SearchRecentSuggestionsProvider;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,16 +120,33 @@ public class bookkeeperFragment extends DialogFragment {
      */
 
     void show(final String year, final String month, final String day){
+        final CharSequence[] items = { "수입", "지출" };
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-
         builder.setTitle("수입/지출 입력"); //타이틀설정
         String today = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n";
         builder.setMessage(today); // 날짜 출력
 
+
         //내용설정
         final EditText name = new EditText(this.getActivity());
-        builder.setView(name);
+        //builder.setView(name);
+        name.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        Log.d("@@@@@@@@","3");
 
+        //수입지출 클릭
+        builder.setSingleChoiceItems(items,-1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        Log.d("!!!!!!!!","2");
+                        // 프로그램을 종료한다
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                items[id] + " 선택했습니다.",
+                                Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+
+        //세 버튼
         builder.setNeutralButton("날짜변경",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 DateOnClickHandler(getView(),year,month,day);
@@ -138,7 +156,8 @@ public class bookkeeperFragment extends DialogFragment {
         builder.setPositiveButton("저장",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        String price = name.getText().toString();
+                        //금액 스트링 가져가!!
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                     }
                 });
@@ -149,7 +168,8 @@ public class bookkeeperFragment extends DialogFragment {
                         Toast.makeText(getActivity().getApplicationContext(),"취소됨",Toast.LENGTH_LONG).show();
                     }
                 });
-        builder.show();
+
+        builder.create().show();
     }
 
     public void DateOnClickHandler(View view, String year, String month, String day)
