@@ -15,10 +15,10 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:background="#FF9801"
             app:tabIndicatorColor="#FF5722"
-            app:tabIndicatorHeight="30dp"/>
+            app:tabIndicatorHeight="50dp"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager

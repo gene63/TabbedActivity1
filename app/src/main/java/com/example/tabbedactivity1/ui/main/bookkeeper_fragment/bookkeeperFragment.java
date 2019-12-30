@@ -1,9 +1,13 @@
 package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SearchRecentSuggestionsProvider;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -13,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -83,6 +88,10 @@ public class bookkeeperFragment extends DialogFragment {
 
         View root = inflater.inflate(R.layout.fragment_bookkeeper, container, false);
         Button add = root.findViewById(R.id.addbutton);
+        Button sub = root.findViewById(R.id.subbutton);
+
+
+
         //오늘날짜 가져오기
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
@@ -95,7 +104,14 @@ public class bookkeeperFragment extends DialogFragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                show(year, month, day);
+                show(year, month, day, true);
+            }
+        });
+
+        sub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show(year, month, day,false);
             }
         });
 
@@ -119,9 +135,70 @@ public class bookkeeperFragment extends DialogFragment {
     }
      */
 
-    void show(final String year, final String month, final String day){
-        final CharSequence[] items = { "수입", "지출" };
+    void show(final String year, final String month, final String day, final boolean addsub){
+
+        final Context mContext = getActivity().getApplicationContext();
+        final LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate( R.layout.custom_dialog, (ViewGroup)getActivity().findViewById( R.id.customdialog));
+
+        //실행코드
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view);
+        builder.create().show();
+
+
+        //각 view 별 정의
+        TextView title = (TextView)view.findViewById(R.id.title1);
+        String today = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n"; // 날짜 만들기
+        TextView date = (TextView)view.findViewById(R.id.date);
+        date.setText(today);
+        TextView as = (TextView)view.findViewById(R.id.price);
+        if(addsub){
+            as.setText("수입");
+            as.setTextColor(Color.parseColor("#0000FF"));
+        }
+        else{
+            as.setText("지출");
+            as.setTextColor(Color.parseColor("#FF0000"));
+        }
+        final EditText inputPrice = (EditText)view.findViewById(R.id.inputPrice);
+        inputPrice.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        Button changeDate = (Button)view.findViewById(R.id.datebutton);
+        Button yes = (Button)view.findViewById(R.id.yesbutton);
+        Button no = (Button)view.findViewById(R.id.nobutton);
+
+        //클릭했을 때 실행되는 매서드
+        changeDate.setOnClickListener(
+                new Button.OnClickListener(){
+                    public void onClick(View v){
+                        DateOnClickHandler(getView(),year,month,day,addsub);
+                    }
+                }
+        );
+
+        yes.setOnClickListener(
+                new Button.OnClickListener(){
+                    public void onClick(View v){
+                        String price = inputPrice.getText().toString();
+                        //금액 스트링 가져가!!
+                        Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+
+        no.setOnClickListener(
+                new Button.OnClickListener(){
+                    public void onClick(View v){
+                        Toast.makeText(getActivity().getApplicationContext(),"입력취소",Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+
+
+        /*
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+
+        final CharSequence[] items = { "수입", "지출" };
         builder.setTitle("수입/지출 입력"); //타이틀설정
         String today = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n";
         builder.setMessage(today); // 날짜 출력
@@ -131,7 +208,6 @@ public class bookkeeperFragment extends DialogFragment {
         final EditText name = new EditText(this.getActivity());
         //builder.setView(name);
         name.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
-        Log.d("@@@@@@@@","3");
 
         //수입지출 클릭
         builder.setSingleChoiceItems(items,-1, new DialogInterface.OnClickListener() {
@@ -170,9 +246,18 @@ public class bookkeeperFragment extends DialogFragment {
                 });
 
         builder.create().show();
+
+         */
     }
 
-    public void DateOnClickHandler(View view, String year, String month, String day)
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+    }
+
+
+    public void DateOnClickHandler(View view, String year, String month, String day, final boolean as)
     {
         DatePickerDialog.OnDateSetListener callbackMethod;
         DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -181,9 +266,9 @@ public class bookkeeperFragment extends DialogFragment {
                 String newYear =String.valueOf(year);
                 String newMonth =String.valueOf(month+1);
                 String newDay =String.valueOf(dayOfMonth);
-                show(newYear, newMonth, newDay);
+                show(newYear, newMonth, newDay, as);
             }
-        },  Integer.parseInt(year),  Integer.parseInt(month),  Integer.parseInt(day));
+        },  Integer.parseInt(year),  Integer.parseInt(month)-1,  Integer.parseInt(day));
 
         dialog.show();
     }
