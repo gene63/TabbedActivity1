@@ -34,11 +34,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             return phonenumberFragment.newInstance(position+1);
         else if (position==1)
             return galleryFragment.newInstance(position+2);
-        /*
+        else if (position==2)
+            return bookkeeperFragment.newInstance(position+3);
         else
-            return new tab3Fragment();
-         */
-        return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position + 1);
     }
 
     @Nullable
