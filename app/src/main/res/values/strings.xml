@@ -7,4 +7,5 @@
     <string name="appName">Tabbed Activity1</string>
     <string name="empty">No Images on this device</string>
     <string name="balance">100000</string>
+    <string name="btitle">Load Contacts</string>
 </resources>

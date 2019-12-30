@@ -46,6 +46,7 @@ public class galleryFragment extends Fragment implements itemClickListener {
 
 
     public static galleryFragment newInstance(int index) {
+
         galleryFragment fragment = new galleryFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
@@ -62,21 +63,24 @@ public class galleryFragment extends Fragment implements itemClickListener {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
+
+
     }
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
+        //로그 안뜸
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+
         return root;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//로그 안뜸
         empty = (TextView)getView().findViewById(R.id.empty);
-
         folderRecycler = (RecyclerView) getView().findViewById(R.id.folderRecycler);
         folderRecycler.addItemDecoration(new MarginDecoration(this.getActivity()));
         folderRecycler.hasFixedSize();
@@ -88,6 +92,7 @@ public class galleryFragment extends Fragment implements itemClickListener {
             RecyclerView.Adapter folderAdapter = new pictureFolderAdapter(folds,galleryFragment.this.getActivity(),this);
             folderRecycler.setAdapter(folderAdapter);
         }
+
     }
 
     /**
