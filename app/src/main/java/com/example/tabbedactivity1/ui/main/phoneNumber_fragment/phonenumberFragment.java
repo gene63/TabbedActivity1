@@ -1,9 +1,7 @@
-package com.example.tabbedactivity1.ui.main;
+package com.example.tabbedactivity1.ui.main.phoneNumber_fragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,30 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.tabbedactivity1.MainActivity;
 import com.example.tabbedactivity1.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
-import static java.sql.DriverManager.println;
-
- /**
+/**
  * A placeholder fragment containing a simple view.
  */
 public class phonenumberFragment extends ListFragment{
@@ -140,7 +124,6 @@ public class phonenumberFragment extends ListFragment{
         });
         //새로운 코드
         //jsonParsing(getJsonString());
-        Log.d("@@@@@@@@","2");
         return view;
  }
 

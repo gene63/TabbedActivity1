@@ -9,6 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.tabbedactivity1.R;
+import com.example.tabbedactivity1.ui.main.bookkeeper_fragment.bookkeeperFragment;
+import com.example.tabbedactivity1.ui.main.gallery_fragments.galleryFragment;
+import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.phonenumberFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

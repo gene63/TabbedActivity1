@@ -1,9 +1,16 @@
-package com.example.tabbedactivity1.ui.main;
+package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tabbedactivity1.R;
+import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -62,6 +71,14 @@ public class bookkeeperFragment extends Fragment {
             Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_bookkeeper, container, false);
+        FloatingActionButton fab = root.findViewById(R.id.fab);
+        Log.d("@@@@@@","1");
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show();
+            }
+        });
         return root;
     }
 
@@ -81,5 +98,53 @@ public class bookkeeperFragment extends Fragment {
         bookkeeperRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity()));
     }
      */
+
+    void show(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+        builder.setTitle("수입/지출 입력");
+        //타이틀설정
+        String tv_text = "안녕하세요";
+        builder.setMessage(tv_text);
+        //내용설정
+        final EditText name = new EditText(this.getActivity());
+        builder.setView(name);
+
+        builder.setNeutralButton("날짜변경",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                OnClickHandler(getView());
+            }
+        });
+
+        builder.setPositiveButton("저장",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        builder.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity().getApplicationContext(),"취소됨",Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.show();
+    }
+
+    public void OnClickHandler(View view)
+    {
+        DatePickerDialog.OnDateSetListener callbackMethod;
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                //
+            }
+        }, 2019, 5, 24);
+
+        dialog.show();
+    }
 }
+
+
 

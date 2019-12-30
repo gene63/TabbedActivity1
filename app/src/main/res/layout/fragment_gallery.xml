@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.main.galleryFragment">
+    tools:context=".ui.main.gallery_fragments.galleryFragment">
 
 
     <com.example.tabbedactivity1.ui.main.gallery_utils.AutoFitRecyclerView

@@ -1,4 +1,4 @@
-package com.example.tabbedactivity1.ui.main;
+package com.example.tabbedactivity1.ui.main.gallery_fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,20 +13,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tabbedactivity1.ui.main.ImageDisplay;
 import com.example.tabbedactivity1.ui.main.gallery_utils.MarginDecoration;
 import com.example.tabbedactivity1.ui.main.gallery_utils.PicHolder;
 import com.example.tabbedactivity1.ui.main.gallery_utils.imageFolder;
 import com.example.tabbedactivity1.ui.main.gallery_utils.itemClickListener;
 import com.example.tabbedactivity1.ui.main.gallery_utils.pictureFacer;
 import com.example.tabbedactivity1.ui.main.gallery_utils.pictureFolderAdapter;
-import com.example.tabbedactivity1.MainActivity;
 import com.example.tabbedactivity1.R;
+import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
+
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;

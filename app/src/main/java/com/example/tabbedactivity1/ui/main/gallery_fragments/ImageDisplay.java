@@ -1,4 +1,4 @@
-package com.example.tabbedactivity1.ui.main;
+package com.example.tabbedactivity1.ui.main.gallery_fragments;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tabbedactivity1.ui.main.gallery_fragments.pictureBrowserFragment;
 import com.example.tabbedactivity1.ui.main.gallery_utils.MarginDecoration;
 import com.example.tabbedactivity1.ui.main.gallery_utils.PicHolder;
 import com.example.tabbedactivity1.ui.main.gallery_utils.itemClickListener;
