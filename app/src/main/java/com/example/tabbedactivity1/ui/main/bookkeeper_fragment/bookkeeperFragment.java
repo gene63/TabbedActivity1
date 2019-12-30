@@ -23,6 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tabbedactivity1.R;
+import com.example.tabbedactivity1.data.bookDAO;
+import com.example.tabbedactivity1.data.bookEntity;
+import com.example.tabbedactivity1.ui.main.bookkeeper_fragment.bookkeeper_util.dialogClickListener;
 import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -94,6 +97,7 @@ public class bookkeeperFragment extends DialogFragment {
                 show(year, month, day);
             }
         });
+
         return root;
     }
 
@@ -134,6 +138,7 @@ public class bookkeeperFragment extends DialogFragment {
         builder.setPositiveButton("저장",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                     }
                 });
@@ -161,6 +166,14 @@ public class bookkeeperFragment extends DialogFragment {
         },  Integer.parseInt(year),  Integer.parseInt(month),  Integer.parseInt(day));
 
         dialog.show();
+    }
+
+    public void onButtonCliked(String type, int value, String date) {
+        bookEntity bookEntry = new bookEntity();
+        bookEntry.type = type;
+        bookEntry.date = date;
+        bookEntry.value = value;
+        // add to DB
     }
 }
 

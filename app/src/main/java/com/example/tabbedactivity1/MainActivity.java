@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.example.tabbedactivity1.data.bookDatabase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     public static Context contextOfApplication;
+    public static bookDatabase bookDB;
+
     public static Context getContextOfApplication()
     {
         return contextOfApplication;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         contextOfApplication = getApplicationContext();
+        bookDB = bookDatabase.getDatabase(getContextOfApplication());
 
     }
     /*

@@ -1,4 +1,4 @@
-package com.example.tabbedactivity1.ui.main.gallery_fragments;
+package com.example.tabbedactivity1.ui.main.gallery_fragment;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,11 +13,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tabbedactivity1.ui.main.gallery_utils.MarginDecoration;
-import com.example.tabbedactivity1.ui.main.gallery_utils.PicHolder;
-import com.example.tabbedactivity1.ui.main.gallery_utils.itemClickListener;
-import com.example.tabbedactivity1.ui.main.gallery_utils.pictureFacer;
-import com.example.tabbedactivity1.ui.main.gallery_utils.picture_Adapter;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.MarginDecoration;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.PicHolder;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.itemClickListener;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.pictureFacer;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.picture_Adapter;
 import com.example.tabbedactivity1.R;
 
 import java.util.ArrayList;

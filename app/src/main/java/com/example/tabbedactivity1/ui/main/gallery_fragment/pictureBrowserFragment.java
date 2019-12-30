@@ -1,4 +1,4 @@
-package com.example.tabbedactivity1.ui.main.gallery_fragments;
+package com.example.tabbedactivity1.ui.main.gallery_fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.tabbedactivity1.ui.main.gallery_utils.imageIndicatorListener;
-import com.example.tabbedactivity1.ui.main.gallery_utils.pictureFacer;
-import com.example.tabbedactivity1.ui.main.gallery_utils.recyclerViewPagerImageIndicator;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.imageIndicatorListener;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.pictureFacer;
+import com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.recyclerViewPagerImageIndicator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.tabbedactivity1.R;

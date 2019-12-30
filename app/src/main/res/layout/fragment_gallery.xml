@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.main.gallery_fragments.galleryFragment">
+    tools:context=".ui.main.gallery_fragment.galleryFragment">
 
 
-    <com.example.tabbedactivity1.ui.main.gallery_utils.AutoFitRecyclerView
+    <com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.AutoFitRecyclerView
         android:id="@+id/folderRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +22,7 @@
        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
        app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"-->
 
-    </com.example.tabbedactivity1.ui.main.gallery_utils.AutoFitRecyclerView>
+    </com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils.AutoFitRecyclerView>
 
 
     <TextView

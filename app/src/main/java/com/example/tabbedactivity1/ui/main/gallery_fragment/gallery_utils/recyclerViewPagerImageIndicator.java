@@ -1,4 +1,4 @@
-package com.example.tabbedactivity1.ui.main.gallery_utils;
+package com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils;
 
 import android.content.Context;
 import android.graphics.Color;

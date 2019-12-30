@@ -1,4 +1,4 @@
-package com.example.tabbedactivity1.ui.main.gallery_utils;
+package com.example.tabbedactivity1.ui.main.gallery_fragment.gallery_utils;
 
 /**
  * Custom class for holding data of images on the device external storage
