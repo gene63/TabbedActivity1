@@ -3,17 +3,20 @@ package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.SearchRecentSuggestionsProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,9 +26,13 @@ import com.example.tabbedactivity1.R;
 import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-public class bookkeeperFragment extends Fragment {
+public class bookkeeperFragment extends DialogFragment {
 
     RecyclerView bookkeeperRecycler = null;
     bookkeeperAdapter bookkeeperAdapter = null;
@@ -71,12 +78,20 @@ public class bookkeeperFragment extends Fragment {
             Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_bookkeeper, container, false);
-        FloatingActionButton fab = root.findViewById(R.id.fab);
-        Log.d("@@@@@@","1");
-        fab.setOnClickListener(new View.OnClickListener() {
+        Button add = root.findViewById(R.id.addbutton);
+        //오늘날짜 가져오기
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM", Locale.getDefault());
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+        final String year = yearFormat.format(currentTime);
+        final String month = monthFormat.format(currentTime);
+        final String day = dayFormat.format(currentTime);
+
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                show();
+                show(year, month, day);
             }
         });
         return root;
@@ -99,20 +114,20 @@ public class bookkeeperFragment extends Fragment {
     }
      */
 
-    void show(){
-
+    void show(final String year, final String month, final String day){
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-        builder.setTitle("수입/지출 입력");
-        //타이틀설정
-        String tv_text = "안녕하세요";
-        builder.setMessage(tv_text);
+
+        builder.setTitle("수입/지출 입력"); //타이틀설정
+        String today = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n";
+        builder.setMessage(today); // 날짜 출력
+
         //내용설정
         final EditText name = new EditText(this.getActivity());
         builder.setView(name);
 
         builder.setNeutralButton("날짜변경",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                OnClickHandler(getView());
+                DateOnClickHandler(getView(),year,month,day);
             }
         });
 
@@ -132,15 +147,18 @@ public class bookkeeperFragment extends Fragment {
         builder.show();
     }
 
-    public void OnClickHandler(View view)
+    public void DateOnClickHandler(View view, String year, String month, String day)
     {
         DatePickerDialog.OnDateSetListener callbackMethod;
         DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                //
+                String newYear =String.valueOf(year);
+                String newMonth =String.valueOf(month+1);
+                String newDay =String.valueOf(dayOfMonth);
+                show(newYear, newMonth, newDay);
             }
-        }, 2019, 5, 24);
+        },  Integer.parseInt(year),  Integer.parseInt(month),  Integer.parseInt(day));
 
         dialog.show();
     }

@@ -17,12 +17,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="fill_parent"
+    <Button
+        android:id="@+id/addbutton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"
-        app:useCompatPadding="true" />
+        android:text="수입/지출 입력" />
 </LinearLayout>
