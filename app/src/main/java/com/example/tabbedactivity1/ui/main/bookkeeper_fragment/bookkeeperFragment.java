@@ -1,16 +1,13 @@
 package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SearchRecentSuggestionsProvider;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +20,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tabbedactivity1.R;
-import com.example.tabbedactivity1.data.bookDAO;
 import com.example.tabbedactivity1.data.bookEntity;
-import com.example.tabbedactivity1.ui.main.bookkeeper_fragment.bookkeeper_util.dialogClickListener;
 import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,7 +81,6 @@ public class bookkeeperFragment extends DialogFragment {
 
         View root = inflater.inflate(R.layout.fragment_bookkeeper, container, false);
         Button add = root.findViewById(R.id.addbutton);
-        Button sub = root.findViewById(R.id.subbutton);
 
 
 
@@ -108,12 +100,6 @@ public class bookkeeperFragment extends DialogFragment {
             }
         });
 
-        sub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                show(year, month, day,false);
-            }
-        });
 
         return root;
     }
@@ -125,15 +111,6 @@ public class bookkeeperFragment extends DialogFragment {
         bookkeeperRecycler.setAdapter(bookkeeperAdapter);
         bookkeeperRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity()));
     }
-    /*
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-        bookkeeperRecycler = (RecyclerView) getView().findViewById(R.id.bookkeeperRecycler);
-        bookkeeperRecycler.setAdapter(bookkeeperAdapter);
-        bookkeeperRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-    }
-     */
 
     void show(final String year, final String month, final String day, final boolean addsub){
 
@@ -144,15 +121,17 @@ public class bookkeeperFragment extends DialogFragment {
         //실행코드
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
-        builder.create().show();
-
+        final AlertDialog dialog = builder.create();
+        dialog.show();
 
         //각 view 별 정의
-        TextView title = (TextView)view.findViewById(R.id.title1);
+        Button inc = (Button) view.findViewById(R.id.incButton);
+        Button exp = (Button) view.findViewById(R.id.expButton);
+
         String today = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n"; // 날짜 만들기
         TextView date = (TextView)view.findViewById(R.id.date);
         date.setText(today);
-        TextView as = (TextView)view.findViewById(R.id.price);
+        final TextView as = (TextView)view.findViewById(R.id.price);
         if(addsub){
             as.setText("수입");
             as.setTextColor(Color.parseColor("#0000FF"));
@@ -168,6 +147,23 @@ public class bookkeeperFragment extends DialogFragment {
         Button no = (Button)view.findViewById(R.id.nobutton);
 
         //클릭했을 때 실행되는 매서드
+
+        inc.setOnClickListener(
+                new Button.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        as.setText("수입");
+                    }
+                });
+
+        exp.setOnClickListener(
+                new Button.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        as.setText("지출");
+                    }
+                });
+
         changeDate.setOnClickListener(
                 new Button.OnClickListener(){
                     public void onClick(View v){
@@ -178,10 +174,11 @@ public class bookkeeperFragment extends DialogFragment {
 
         yes.setOnClickListener(
                 new Button.OnClickListener(){
-                    public void onClick(View v){
+                    public void onClick(View view){
                         String price = inputPrice.getText().toString();
                         //금액 스트링 가져가!!
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
+                        dialog.cancel();
                     }
                 }
         );
@@ -190,6 +187,7 @@ public class bookkeeperFragment extends DialogFragment {
                 new Button.OnClickListener(){
                     public void onClick(View v){
                         Toast.makeText(getActivity().getApplicationContext(),"입력취소",Toast.LENGTH_LONG).show();
+                        dialog.cancel();
                     }
                 }
         );

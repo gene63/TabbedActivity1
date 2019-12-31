@@ -26,21 +26,12 @@
 
         <Button
             android:id="@+id/addbutton"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:textColor="@color/blue"
-            android:text="수입 입력"
-            android:textSize="30dp"/>
-
-        <Button
-            android:id="@+id/subbutton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="지출 입력"
-            android:textColor="@color/red"
-            android:textSize="30dp"/>
+            android:text="+"
+            android:textSize="30dp"
+            style="?android:borderlessButtonStyle"/>
 
     </LinearLayout>
 </LinearLayout>

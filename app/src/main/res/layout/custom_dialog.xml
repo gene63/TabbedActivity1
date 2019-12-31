@@ -8,15 +8,28 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/title1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="5sp"
-        android:text="수입/지출 입력"
-        android:textColor="#000000"
-        android:textSize="25dp" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/incButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fadingEdge="none"
+            android:text="수입"
+            style="?android:borderlessButtonStyle"/>
+
+        <Button
+            android:id="@+id/expButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="지출"
+            style="?android:borderlessButtonStyle" />
+    </LinearLayout>
 
     <View
         android:id="@+id/divider"
@@ -83,12 +96,13 @@
             android:layout_height="0dp"
             android:layout_weight="3"/>
 
-        <Button android:id="@+id/nobutton"
+        <Button
+            android:id="@+id/nobutton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textSize="13dp"
-            android:text="최소"/>
+            android:text="취소"
+            android:textSize="13dp" />
 
         <Button android:id="@+id/yesbutton"
             android:layout_width="0dp"
