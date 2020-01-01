@@ -13,15 +13,15 @@ import java.util.List;
 
 @Dao
 public interface bookDAO {
-    @Query("SELECT * FROM book_table")
+    @Query("SELECT * FROM book_table ORDER BY date")
     List<bookEntity> getAllBookEntity();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertData(bookEntity data);
 
     @Update
-    void updateBook(bookEntity book);
+    void updateData(bookEntity data);
 
     @Delete
-    void deleteBook(bookEntity book);
+    void deleteData(bookEntity data);
 }

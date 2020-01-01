@@ -2,9 +2,7 @@ package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,21 +20,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.tabbedactivity1.R;
-import com.example.tabbedactivity1.data.bookDAO;
 import com.example.tabbedactivity1.data.bookDatabase;
 import com.example.tabbedactivity1.data.bookEntity;
 import com.example.tabbedactivity1.data.dbClient;
 import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -75,7 +70,7 @@ public class bookkeeperFragment extends DialogFragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_bookkeeper, container, false);
+        View root = inflater.inflate(R.layout.bookkeeper_fragment, container, false);
         Button add = root.findViewById(R.id.addbutton);
 
 
@@ -124,26 +119,23 @@ public class bookkeeperFragment extends DialogFragment {
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
-        bookEntity.setType("exp");
 
         //각 view 별 정의
         Button inc = (Button) view.findViewById(R.id.incButton);
         Button exp = (Button) view.findViewById(R.id.expButton);
 
         String repDate = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n"; // 날짜 만들기
-        final String strDate = year + "." + month + "." + day;
+        final int Date = Integer.valueOf(year)*10000 +
+                Integer.valueOf(month)*100 +
+                Integer.valueOf(day);
 
         TextView date = (TextView)view.findViewById(R.id.date);
         date.setText(repDate);
         final TextView as = (TextView)view.findViewById(R.id.price);
-        if(addsub){
-            as.setText("수입");
-            as.setTextColor(Color.parseColor("#0000FF"));
-        }
-        else{
-            as.setText("지출");
-            as.setTextColor(Color.parseColor("#FF0000"));
-        }
+        as.setText("지출");
+        as.setTextColor(Color.parseColor("#FF0000"));
+        bookEntity.setType("exp");
+
         final EditText inputPrice = (EditText)view.findViewById(R.id.inputPrice);
         inputPrice.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         Button changeDate = (Button)view.findViewById(R.id.datebutton);
@@ -186,14 +178,14 @@ public class bookkeeperFragment extends DialogFragment {
                     public void onClick(View view){
                         String price = inputPrice.getText().toString();
                         bookEntity.setValue(price);
-                        bookEntity.setDate(strDate);
+                        bookEntity.setDate(Date);
 
                         // adding to DB
                         dbClient.getInstance(getActivity().getApplicationContext())
                                 .getBookDB()
                                 .bookDAO()
                                 .insertData(bookEntity);
-
+                        getBEs();
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                         dialog.cancel();
                     }

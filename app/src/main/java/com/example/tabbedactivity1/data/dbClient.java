@@ -16,7 +16,6 @@ public class dbClient {
         this.mCtx = mCtx;
 
         //creating the app database with Room database builder
-        //MyToDos is the name of the database
         bookDB = Room.databaseBuilder(mCtx, bookDatabase.class, "book_database")
                 .allowMainThreadQueries()
                 .build();

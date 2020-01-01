@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TabbedActivity1</string>
-    <string name="tab_text_1">Phone Number</string>
-    <string name="tab_text_2">Image Gallery</string>
+    <string name="tab_text_1">Contacts</string>
+    <string name="tab_text_2">Gallery</string>
     <string name="tab_text_3">Book Keeper</string>
     <string name="folderName">Folder Name</string>
     <string name="appName">Tabbed Activity1</string>

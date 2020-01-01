@@ -17,12 +17,13 @@ public class bookEntity {
     private String value;
 
     @ColumnInfo(name="date")
-    private String date;
+    private int date;
 
     // getter and setter
     public int getUid() {
         return uid;
     }
+
     public String getType() {
         return type;
     }
@@ -31,7 +32,7 @@ public class bookEntity {
         return value;
     }
 
-    public String getDate() {
+    public int getDate() {
         return date;
     }
 
@@ -39,16 +40,12 @@ public class bookEntity {
         this.uid = id;
     }
 
-    public void setType(String str) {
-        this.type = str;
-    }
+    public void setType(String str) { this.type = str; }
 
     public void setValue(String str) {
         this.value = str;
     }
 
-    public void setDate(String str) {
-        this.date = str;
-    }
+    public void setDate(int date) { this.date = date; }
 
 }

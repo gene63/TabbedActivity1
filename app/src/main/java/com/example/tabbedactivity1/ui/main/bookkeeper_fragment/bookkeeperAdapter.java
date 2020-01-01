@@ -31,6 +31,7 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
         ImageView imageView;
         TextView valueView;
         TextView dateView;
+        View background;
 
         BookHolder(View itemView) {
             super(itemView);
@@ -38,6 +39,8 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
             imageView = itemView.findViewById(R.id.inc_exp);
             valueView = itemView.findViewById(R.id.value);
             dateView = itemView.findViewById(R.id.date);
+            background = itemView.findViewById(R.id.item_backround);
+
 
             // itemView.setOnClickListener(this);
         }
@@ -54,13 +57,20 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
     public void onBindViewHolder(@NonNull final BookHolder holder, final int position) {
 
         bookEntity be = bookList.get(position);
-        if(be.getType()=="inc")
+        if(be.getType()=="inc") {
             holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.cat_icon));
-        else
+            holder.background.setBackground(mCtx.getResources().getDrawable(R.drawable.round_edge_dark));
+        }
+        else {
             holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.dog_icon));
+            holder.background.setBackground(mCtx.getResources().getDrawable(R.drawable.round_edge_light));
+        }
+        int date = be.getDate();
+        String strDate = Integer.toString(date/10000)
+                +"."+Integer.toString((date%10000)/100)
+                +"."+Integer.toString(date%100);
         holder.valueView.setText(be.getValue());
-        Log.v("value: ", be.getValue());
-        holder.dateView.setText(be.getDate());
+        holder.dateView.setText(strDate);
     }
 
     @Override
