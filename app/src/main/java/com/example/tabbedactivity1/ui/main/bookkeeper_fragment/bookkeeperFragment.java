@@ -193,6 +193,7 @@ public class bookkeeperFragment extends DialogFragment {
                                 .insertData(bookentity);
 
                         Log.d(bookentity.getType(),"2");
+
                         getBEs();
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                         dialog.cancel();
@@ -236,6 +237,9 @@ public class bookkeeperFragment extends DialogFragment {
                         .getBookDB()
                         .bookDAO()
                         .getAllBookEntity();
+                for(int i=0;i<bookList.size();i++){
+                    Log.d("type: ",bookList.get(i).getType());
+                }
                 return bookList;
             }
 

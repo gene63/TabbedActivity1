@@ -80,7 +80,7 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
     public void onBindViewHolder(@NonNull final BookHolder holder, final int position) {
         final int Position = position;
         bookEntity be = bookList.get(position);
-        if(be.getType()=="inc") {
+        if(be.getType().equals("inc")) {
             holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.cat_icon));
             holder.background.setBackground(mCtx.getResources().getDrawable(R.drawable.round_edge_dark));
         }
