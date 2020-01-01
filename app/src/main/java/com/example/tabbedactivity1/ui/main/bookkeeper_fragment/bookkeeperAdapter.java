@@ -22,9 +22,9 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
     private Context mCtx;
     private List<bookEntity> bookList;
 
-    public bookkeeperAdapter(List<bookEntity> item) {
-        this.mCtx = mCtx;
-        this.bookList = bookList;
+    public bookkeeperAdapter(List<bookEntity> item, Context context) {
+        this.mCtx = context;
+        this.bookList = item;
     }
 
     public class BookHolder extends RecyclerView.ViewHolder{

@@ -236,11 +236,12 @@ public class bookkeeperFragment extends DialogFragment {
                 return bookList;
             }
 
-            protected void onPostsExecute(List<bookEntity> bookList) {
-                super.onPostExecute(bookList);
-                bookkeeperAdapter = new bookkeeperAdapter(bookList);
+            @Override
+            protected void onPostExecute(List<bookEntity> bookList) {
+                bookkeeperAdapter = new bookkeeperAdapter(bookList, getActivity());
                 bookkeeperRecycler.setAdapter(bookkeeperAdapter);
-                Log.v("adapter attached", "");
+                super.onPostExecute(bookList);
+                Log.v("attach executed", "");
             }
         }
 
