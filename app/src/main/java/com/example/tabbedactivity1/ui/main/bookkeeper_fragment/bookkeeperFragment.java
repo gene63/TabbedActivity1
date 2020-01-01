@@ -157,6 +157,7 @@ public class bookkeeperFragment extends DialogFragment {
                     @Override
                     public void onClick(View v){
                         as.setText("수입");
+                        as.setTextColor(Color.BLUE);
                         bookEntity.setType("inc");
                     }
                 });
@@ -166,6 +167,7 @@ public class bookkeeperFragment extends DialogFragment {
                     @Override
                     public void onClick(View v){
                         as.setText("지출");
+                        as.setTextColor(Color.RED);
                         bookEntity.setType("exp");
                     }
                 });
@@ -174,6 +176,7 @@ public class bookkeeperFragment extends DialogFragment {
                 new Button.OnClickListener(){
                     public void onClick(View v){
                         DateOnClickHandler(getView(),year,month,day,addsub);
+                        dialog.cancel();
                     }
                 }
         );

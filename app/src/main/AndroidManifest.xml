@@ -8,11 +8,12 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:required="true" />
-
     <uses-permission
         android:name="android.permission.READ_CONTACTS"
         android:required="true" />
-
+    <uses-permission
+        android:name="android.permission.WRITE_CONTACTS"
+        android:required="true"/>
     <uses-sdk
         android:targetSdkVersion="26" />
 
