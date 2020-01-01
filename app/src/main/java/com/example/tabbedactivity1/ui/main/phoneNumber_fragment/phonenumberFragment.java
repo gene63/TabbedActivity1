@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -86,25 +87,41 @@ public class phonenumberFragment extends ListFragment{
                 addpersonshow(contacts);
              }
         });
+        //길게 클릭 -> 삭제알림
         list1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+                public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("전화번호 삭제");
+                    builder.setMessage("정말 삭제하시겠습니까?");
+                    builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY + " asc";
+                            Context applicationContext = MainActivity.getContextOfApplication();
+                            Cursor c = applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, sortOrder);
+                            for(int i =0; i<pos+1;i++){
+                                c.moveToNext();
+                            }
+                            String deleteID = c.getString(c.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID));
+                            Log.v("long clicked", deleteID);
+                            getContext().getContentResolver().delete(ContactsContract.RawContacts.CONTENT_URI, ContactsContract.RawContacts.CONTACT_ID + " = " + deleteID, null);
+                            contacts.remove(pos);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                    getActivity().getApplicationContext(), R.layout.text, contacts);
+                            adapter.notifyDataSetChanged();
+                            list1.setAdapter(adapter);
+                            Toast.makeText(getActivity().getApplicationContext(),"삭제완료",Toast.LENGTH_LONG).show();
+                        }
+                    });
 
-                String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY + " asc";
-                Context applicationContext = MainActivity.getContextOfApplication();
-                Cursor c = applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, sortOrder);
-                for(int i =0; i<pos+1;i++){
-                    c.moveToNext();
-                }
-                String deleteID = c.getString(c.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID));
-                Log.v("long clicked", deleteID);
-                getContext().getContentResolver().delete(ContactsContract.RawContacts.CONTENT_URI, ContactsContract.RawContacts.CONTACT_ID + " = " + deleteID, null);
-                contacts.remove(pos);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity().getApplicationContext(), R.layout.text, contacts);
-                adapter.notifyDataSetChanged();
-                list1.setAdapter(adapter);
-                return true;
+                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getActivity().getApplicationContext(),"취소됨",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    builder.show();
+                    return true;
+
             }
         });
 
@@ -182,10 +199,11 @@ public class phonenumberFragment extends ListFragment{
             String phNumber = c
                     .getString(c
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            String id = c
+            String id =  c
                     .getString(c
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
 
+            contacts.add("이       름 : "+ contactName + "\n"+ "전화번호 : " + phNumber);
         }
         c.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
