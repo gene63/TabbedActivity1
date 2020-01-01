@@ -14,7 +14,9 @@
         android:layout_weight="9.3"
         android:cacheColorHint="#ffccff"
         android:divider="#808080"
-        android:dividerHeight="2sp"></ListView>
+        android:dividerHeight="2sp"
+        android:longClickable="true"
+        android:clickable="true"></ListView>
 
     <Button
         android:id="@+id/addperson"

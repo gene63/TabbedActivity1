@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +35,7 @@ import com.example.tabbedactivity1.data.bookEntity;
 import com.example.tabbedactivity1.data.dbClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -123,23 +125,30 @@ public class phonenumberFragment extends ListFragment{
         list1 = (ListView) view.findViewById(android.R.id.list);
         addBtn = (Button) view.findViewById(R.id.addperson);
 
-        //화면에 전화번호 가져오기
-//        LoadContactsAyscn lca = new LoadContactsAyscn();
-//        lca.execute();
+        //전화번호부에서 번호 가져오기
+        ArrayList<String> contacts = new ArrayList<String>();
+        call(contacts);
 
+        //추가 버튼
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                addpersonshow(contacts);
+             }
+        });
+        list1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int pos, long id) {
+                // TODO Auto-generated method stub
 
-                //전화번호부에서 번호 가져오기
-                ArrayList<String> contacts = new ArrayList<String>();
-                call(contacts);
+                Log.v("long clicked","pos: " + pos);
 
-                //추가 버튼
-                addBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        addpersonshow(contacts);
+                return true;
             }
         });
+
 
 
         return view;
@@ -157,7 +166,6 @@ public class phonenumberFragment extends ListFragment{
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
-        //bookEntity.setType("exp");
 
         //각 view 별 정의
         final EditText inputname = (EditText)view.findViewById(R.id.inputName);
@@ -188,7 +196,12 @@ public class phonenumberFragment extends ListFragment{
                             String phonenumber = inputphonenum.getText().toString();
                             ContactAdd(name, phonenumber);
                             contacts.add("이       름 : "+ name + "\n"+ "전화번호 : " + phonenumber);
-                            call(contacts);
+                            //call(contacts);
+                            Collections.sort(contacts);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                    getActivity().getApplicationContext(), R.layout.text, contacts);
+                            adapter.notifyDataSetChanged();
+                            list1.setAdapter(adapter);
                             Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                             dialog.cancel();
                         }
