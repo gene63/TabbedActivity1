@@ -63,58 +63,6 @@ public class phonenumberFragment extends ListFragment{
 
     }
 
-//     class LoadContactsAyscn extends AsyncTask<Void, Void, ArrayList<String>> {
-//         ProgressDialog pd;
-//
-//         @Override
-//         protected void onPreExecute() {
-//             // TODO Auto-generated method stub
-//             super.onPreExecute();
-//
-//             pd = ProgressDialog.show(getActivity(), "Loading Contacts",
-//                     "Please Wait");
-//         }
-//
-//         @Override
-//         protected ArrayList<String> doInBackground(Void... params) {
-//             // TODO Auto-generated method stub
-//             ArrayList<String> contacts = new ArrayList<String>();
-//             String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY + " asc";
-//             Context applicationContext = MainActivity.getContextOfApplication();
-//             Cursor c = applicationContext.getContentResolver().query(
-//                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-//                     null, null, sortOrder);
-//             while (c.moveToNext()) {
-//
-//                 String contactName = c
-//                         .getString(c
-//                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-//                 String phNumber = c
-//                         .getString(c
-//                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//
-//                 contacts.add("이       름 : "+ contactName + "\n"+ "전화번호 : " + phNumber);
-//
-//             }
-//
-//             c.close();
-//
-//             return contacts;
-//         }
-//
-//         @Override
-//         protected void onPostExecute(ArrayList<String> contacts) {
-//             // TODO Auto-generated method stub
-//             super.onPostExecute(contacts);
-//
-//             pd.cancel();
-//             ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                     getActivity().getApplicationContext(), R.layout.text, contacts);
-//             adapter.notifyDataSetChanged();
-//             list1.setAdapter(adapter);
-//         }
-//
-//     }
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -127,6 +75,7 @@ public class phonenumberFragment extends ListFragment{
 
         //전화번호부에서 번호 가져오기
         ArrayList<String> contacts = new ArrayList<String>();
+
         call(contacts);
 
         //추가 버튼
@@ -138,13 +87,23 @@ public class phonenumberFragment extends ListFragment{
              }
         });
         list1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int pos, long id) {
-                // TODO Auto-generated method stub
+                @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
 
-                Log.v("long clicked","pos: " + pos);
-
+                String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY + " asc";
+                Context applicationContext = MainActivity.getContextOfApplication();
+                Cursor c = applicationContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, sortOrder);
+                for(int i =0; i<pos+1;i++){
+                    c.moveToNext();
+                }
+                String deleteID = c.getString(c.getColumnIndex(ContactsContract.RawContacts.CONTACT_ID));
+                Log.v("long clicked", deleteID);
+                getContext().getContentResolver().delete(ContactsContract.RawContacts.CONTENT_URI, ContactsContract.RawContacts.CONTACT_ID + " = " + deleteID, null);
+                contacts.remove(pos);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getActivity().getApplicationContext(), R.layout.text, contacts);
+                adapter.notifyDataSetChanged();
+                list1.setAdapter(adapter);
                 return true;
             }
         });
@@ -198,6 +157,7 @@ public class phonenumberFragment extends ListFragment{
                             contacts.add("이       름 : "+ name + "\n"+ "전화번호 : " + phonenumber);
                             //call(contacts);
                             Collections.sort(contacts);
+
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                                     getActivity().getApplicationContext(), R.layout.text, contacts);
                             adapter.notifyDataSetChanged();
@@ -222,8 +182,10 @@ public class phonenumberFragment extends ListFragment{
             String phNumber = c
                     .getString(c
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String id = c
+                    .getString(c
+                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
 
-            contacts.add("이       름 : "+ contactName + "\n"+ "전화번호 : " + phNumber);
         }
         c.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
