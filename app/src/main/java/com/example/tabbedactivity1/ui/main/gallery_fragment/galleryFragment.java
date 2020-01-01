@@ -1,6 +1,8 @@
 package com.example.tabbedactivity1.ui.main.gallery_fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +41,6 @@ public class galleryFragment extends Fragment implements itemClickListener {
 
     RecyclerView folderRecycler;
     TextView empty;
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private PageViewModel pageViewModel;
 
@@ -61,8 +64,6 @@ public class galleryFragment extends Fragment implements itemClickListener {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
-
-
     }
 
     @Override
@@ -78,6 +79,7 @@ public class galleryFragment extends Fragment implements itemClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 //로그 안뜸
+
         empty = (TextView)getView().findViewById(R.id.empty);
         folderRecycler = (RecyclerView) getView().findViewById(R.id.folderRecycler);
         folderRecycler.addItemDecoration(new MarginDecoration(this.getActivity()));

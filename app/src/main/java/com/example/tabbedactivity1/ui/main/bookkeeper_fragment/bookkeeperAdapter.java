@@ -1,5 +1,7 @@
 package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,26 +12,34 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tabbedactivity1.R;
+import com.example.tabbedactivity1.data.bookEntity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.BookHolder> {
 
-    private ArrayList<bookItem> mData = null;
+    private Context mCtx;
+    private List<bookEntity> bookList;
 
-    public bookkeeperAdapter(ArrayList<bookItem> item) {
-        this.mData = item;
+    public bookkeeperAdapter(List<bookEntity> item) {
+        this.mCtx = mCtx;
+        this.bookList = bookList;
     }
 
     public class BookHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
-        TextView textView;
+        TextView valueView;
+        TextView dateView;
 
         BookHolder(View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.inc_exp);
-            textView = itemView.findViewById(R.id.value);
+            valueView = itemView.findViewById(R.id.value);
+            dateView = itemView.findViewById(R.id.date);
+
+            // itemView.setOnClickListener(this);
         }
     }
 
@@ -43,14 +53,20 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
     @Override
     public void onBindViewHolder(@NonNull final BookHolder holder, final int position) {
 
-        bookItem item = mData.get(position);
-
-        holder.imageView.setImageDrawable(item.getImg());
-        holder.textView.setText(item.getVal());
+        bookEntity be = bookList.get(position);
+        if(be.getType()=="inc")
+            holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.cat_icon));
+        else
+            holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.dog_icon));
+        holder.valueView.setText(be.getValue());
+        Log.v("value: ", be.getValue());
+        holder.dateView.setText(be.getDate());
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        if(bookList==null)
+            return 0;
+        return bookList.size();
     }
 }

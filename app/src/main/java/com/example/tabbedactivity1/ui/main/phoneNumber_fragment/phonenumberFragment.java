@@ -1,7 +1,9 @@
 package com.example.tabbedactivity1.ui.main.phoneNumber_fragment;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.ListFragment;
 
 import com.example.tabbedactivity1.MainActivity;
@@ -46,7 +50,6 @@ public class phonenumberFragment extends ListFragment{
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
 
     }
 
@@ -113,6 +116,7 @@ public class phonenumberFragment extends ListFragment{
         ll = (LinearLayout) view.findViewById(R.id.LinearLayout1);
         list1 = (ListView) view.findViewById(android.R.id.list);
         loadBtn = (Button) view.findViewById(R.id.button1);
+
 
         loadBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -13,7 +13,6 @@
             android:id="@+id/inc_exp"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars[0]" />
@@ -27,9 +26,21 @@
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/inc_exp"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/date"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteY="731dp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:gravity="center"
+            app:layout_constraintLeft_toRightOf="@id/value"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

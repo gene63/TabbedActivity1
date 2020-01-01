@@ -6,8 +6,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,25 +22,31 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.tabbedactivity1.R;
+import com.example.tabbedactivity1.data.bookDAO;
+import com.example.tabbedactivity1.data.bookDatabase;
 import com.example.tabbedactivity1.data.bookEntity;
+import com.example.tabbedactivity1.data.dbClient;
 import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class bookkeeperFragment extends DialogFragment {
 
     RecyclerView bookkeeperRecycler = null;
     bookkeeperAdapter bookkeeperAdapter = null;
-    ArrayList<bookItem> arrItem = new ArrayList<>();
+    bookDatabase bookDB = null;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private PageViewModel pageViewModel;
@@ -60,18 +68,6 @@ public class bookkeeperFragment extends DialogFragment {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
-
-        for (int i=0; i<100; i++){
-            bookItem item = new bookItem();
-            item.setVal(String.format("%d", i));
-            if (i%2==0) {
-                item.setImg(this.getResources().getDrawable(R.drawable.cat_icon));
-            }
-            else {
-                item.setImg(this.getResources().getDrawable(R.drawable.dog_icon));
-            }
-            arrItem.add(item);
-        }
     }
 
     @Override
@@ -106,31 +102,39 @@ public class bookkeeperFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+        // database instance
+        bookDB = Room.databaseBuilder(this.getContext(),
+                bookDatabase.class,
+                "book_database").build();
         bookkeeperRecycler = (RecyclerView) getView().findViewById(R.id.bookkeeperRecycler);
-        bookkeeperAdapter = new bookkeeperAdapter(arrItem);
-        bookkeeperRecycler.setAdapter(bookkeeperAdapter);
         bookkeeperRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+
+        getBEs();
     }
 
     void show(final String year, final String month, final String day, final boolean addsub){
 
         final Context mContext = getActivity().getApplicationContext();
         final LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate( R.layout.custom_dialog, (ViewGroup)getActivity().findViewById( R.id.customdialog));
+        View view = inflater.inflate(R.layout.custom_dialog, (ViewGroup)getActivity().findViewById( R.id.customdialog));
+        final bookEntity bookEntity = new bookEntity();
 
         //실행코드
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
+        bookEntity.setType("exp");
 
         //각 view 별 정의
         Button inc = (Button) view.findViewById(R.id.incButton);
         Button exp = (Button) view.findViewById(R.id.expButton);
 
-        String today = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n"; // 날짜 만들기
+        String repDate = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n"; // 날짜 만들기
+        final String strDate = year + "." + month + "." + day;
+
         TextView date = (TextView)view.findViewById(R.id.date);
-        date.setText(today);
+        date.setText(repDate);
         final TextView as = (TextView)view.findViewById(R.id.price);
         if(addsub){
             as.setText("수입");
@@ -153,6 +157,7 @@ public class bookkeeperFragment extends DialogFragment {
                     @Override
                     public void onClick(View v){
                         as.setText("수입");
+                        bookEntity.setType("inc");
                     }
                 });
 
@@ -161,6 +166,7 @@ public class bookkeeperFragment extends DialogFragment {
                     @Override
                     public void onClick(View v){
                         as.setText("지출");
+                        bookEntity.setType("exp");
                     }
                 });
 
@@ -176,7 +182,15 @@ public class bookkeeperFragment extends DialogFragment {
                 new Button.OnClickListener(){
                     public void onClick(View view){
                         String price = inputPrice.getText().toString();
-                        //금액 스트링 가져가!!
+                        bookEntity.setValue(price);
+                        bookEntity.setDate(strDate);
+
+                        // adding to DB
+                        dbClient.getInstance(getActivity().getApplicationContext())
+                                .getBookDB()
+                                .bookDAO()
+                                .insertData(bookEntity);
+
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                         dialog.cancel();
                     }
@@ -191,69 +205,7 @@ public class bookkeeperFragment extends DialogFragment {
                     }
                 }
         );
-
-
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-
-        final CharSequence[] items = { "수입", "지출" };
-        builder.setTitle("수입/지출 입력"); //타이틀설정
-        String today = "\n날짜 : " + year + "년 " + month + "월 " + day + "일\n";
-        builder.setMessage(today); // 날짜 출력
-
-
-        //내용설정
-        final EditText name = new EditText(this.getActivity());
-        //builder.setView(name);
-        name.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
-
-        //수입지출 클릭
-        builder.setSingleChoiceItems(items,-1, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int id) {
-                        Log.d("!!!!!!!!","2");
-                        // 프로그램을 종료한다
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                items[id] + " 선택했습니다.",
-                                Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
-
-        //세 버튼
-        builder.setNeutralButton("날짜변경",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                DateOnClickHandler(getView(),year,month,day);
-            }
-        });
-
-        builder.setPositiveButton("저장",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String price = name.getText().toString();
-                        //금액 스트링 가져가!!
-                        Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        builder.setNegativeButton("취소",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity().getApplicationContext(),"취소됨",Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        builder.create().show();
-
-         */
     }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-
-    }
-
 
     public void DateOnClickHandler(View view, String year, String month, String day, final boolean as)
     {
@@ -271,12 +223,29 @@ public class bookkeeperFragment extends DialogFragment {
         dialog.show();
     }
 
-    public void onButtonCliked(String type, int value, String date) {
-        bookEntity bookEntry = new bookEntity();
-        bookEntry.type = type;
-        bookEntry.date = date;
-        bookEntry.value = value;
-        // add to DB
+    private void getBEs() {
+        class GetBEs extends AsyncTask<Void, Void, List<bookEntity>> {
+
+            @Override
+            protected List<bookEntity> doInBackground(Void... voids) {
+                List<bookEntity> bookList = dbClient
+                        .getInstance(getActivity().getApplicationContext())
+                        .getBookDB()
+                        .bookDAO()
+                        .getAllBookEntity();
+                return bookList;
+            }
+
+            protected void onPostsExecute(List<bookEntity> bookList) {
+                super.onPostExecute(bookList);
+                bookkeeperAdapter = new bookkeeperAdapter(bookList);
+                bookkeeperRecycler.setAdapter(bookkeeperAdapter);
+                Log.v("adapter attached", "");
+            }
+        }
+
+        GetBEs gb = new GetBEs();
+        gb.execute();
     }
 }
 

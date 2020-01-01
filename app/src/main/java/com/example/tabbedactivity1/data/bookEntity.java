@@ -7,15 +7,48 @@ import androidx.room.PrimaryKey;
 @Entity(tableName="book_table")
 public class bookEntity {
 
-    @PrimaryKey
-    public int uid;
+    @PrimaryKey(autoGenerate = true)
+    private int uid;
 
     @ColumnInfo(name="type")
-    public String type;
+    private String type;
 
     @ColumnInfo(name="value")
-    public int value;
+    private String value;
 
     @ColumnInfo(name="date")
-    public String date;
+    private String date;
+
+    // getter and setter
+    public int getUid() {
+        return uid;
+    }
+    public String getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setUid(int id) {
+        this.uid = id;
+    }
+
+    public void setType(String str) {
+        this.type = str;
+    }
+
+    public void setValue(String str) {
+        this.value = str;
+    }
+
+    public void setDate(String str) {
+        this.date = str;
+    }
+
 }

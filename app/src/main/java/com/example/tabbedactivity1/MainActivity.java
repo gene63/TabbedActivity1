@@ -1,44 +1,36 @@
 package com.example.tabbedactivity1;
 
 
-import java.io.InputStream;
-import java.io.IOException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.widget.TextView;
 
-import com.example.tabbedactivity1.data.bookDatabase;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import com.example.tabbedactivity1.ui.main.SectionsPagerAdapter;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView folderRecycler;
-    TextView empty;
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     public static Context contextOfApplication;
-    public static bookDatabase bookDB;
+    private String[] permissions = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.WRITE_CONTACTS};
 
     public static Context getContextOfApplication()
     {
@@ -49,21 +41,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // requesting gallery permission
-        if(ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        // requesting contact permission
-        if(ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_CONTACTS},
-                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-        //____________________________________________________________________________________
+
+        if(!arePermissionsEnabled()){
+                requestMultiplePermissions();
+        }
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager1);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -71,74 +52,48 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         contextOfApplication = getApplicationContext();
-        bookDB = bookDatabase.getDatabase(getContextOfApplication());
-
-    }
-    /*
-    private String getJsonString()
-    {
-        String json = "";
-
-        try {
-            InputStream is = getAssets().open("phonenum.json");
-            int fileSize = is.available();
-
-            byte[] buffer = new byte[fileSize];
-            is.read(buffer);
-            is.close();
-
-            json = new String(buffer, "UTF-8");
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-
-        return json;
     }
 
-    public class PhoneNum{
-        private String name;
-        private String number;
-
-        public String getName() {
-            return name;
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean arePermissionsEnabled(){
+        for(String permission : permissions){
+            if(checkSelfPermission(permission)!=PackageManager.PERMISSION_GRANTED)
+                return false;
         }
-
-        public String getNumber() {
-            return number;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setNumber(String number) {
-            this.number = number;
-        }
+        return true;
     }
-    private void jsonParsing(String json)
-    {
-        try{
-            JSONObject jsonObject = new JSONObject(json);
 
-            JSONArray phonenumArray = jsonObject.getJSONArray("phonenum");
-
-            for(int i=0; i<phonenumArray.length(); i++)
-            {
-                JSONObject phonenumObject = phonenumArray.getJSONObject(i);
-
-                PhoneNum pn = new PhoneNum();
-
-                pn.setName(phonenumObject.getString("name"));
-                pn.setNumber(phonenumObject.getString("number"));
-
-                //phonenumArray.add(pn);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestMultiplePermissions(){
+        List<String> remainingPermissions = new ArrayList<>();
+        for(String permission : permissions) {
+            if(checkSelfPermission(permission)!=PackageManager.PERMISSION_GRANTED){
+                remainingPermissions.add(permission);
             }
-        }catch (JSONException e) {
-            e.printStackTrace();
         }
+        requestPermissions(remainingPermissions.toArray(new String[remainingPermissions.size()]), 101);
+    }
 
-
-    }*/
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onRequestPermissionResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==101){
+            for(int i=0; i<grantResults.length; i++){
+                if(grantResults[i]!=PackageManager.PERMISSION_GRANTED){
+                    if(shouldShowRequestPermissionRationale(permissions[i])){
+                        new AlertDialog.Builder(this)
+                                .setMessage("I like foxes")
+                                .setPositiveButton("Yes", (dialog, which) -> requestMultiplePermissions())
+                                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                                .create()
+                                .show();
+                    }
+                    return ;
+                }
+            }
+        }
+    }
 }
