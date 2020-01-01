@@ -24,4 +24,7 @@ public interface bookDAO {
 
     @Delete
     void deleteData(bookEntity data);
+
+
+
 }

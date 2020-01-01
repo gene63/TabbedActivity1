@@ -3,14 +3,19 @@ package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -25,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.example.tabbedactivity1.MainActivity;
 import com.example.tabbedactivity1.R;
 import com.example.tabbedactivity1.data.bookDatabase;
 import com.example.tabbedactivity1.data.bookEntity;
@@ -103,7 +109,6 @@ public class bookkeeperFragment extends DialogFragment {
                 "book_database").build();
         bookkeeperRecycler = (RecyclerView) getView().findViewById(R.id.bookkeeperRecycler);
         bookkeeperRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-
         getBEs();
     }
 
@@ -112,7 +117,7 @@ public class bookkeeperFragment extends DialogFragment {
         final Context mContext = getActivity().getApplicationContext();
         final LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.custom_dialog, (ViewGroup)getActivity().findViewById( R.id.customdialog));
-        final bookEntity bookEntity = new bookEntity();
+        final bookEntity bookentity = new bookEntity();
 
         //실행코드
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -134,7 +139,7 @@ public class bookkeeperFragment extends DialogFragment {
         final TextView as = (TextView)view.findViewById(R.id.price);
         as.setText("지출");
         as.setTextColor(Color.parseColor("#FF0000"));
-        bookEntity.setType("exp");
+        bookentity.setType("exp");
 
         final EditText inputPrice = (EditText)view.findViewById(R.id.inputPrice);
         inputPrice.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
@@ -150,7 +155,7 @@ public class bookkeeperFragment extends DialogFragment {
                     public void onClick(View v){
                         as.setText("수입");
                         as.setTextColor(Color.BLUE);
-                        bookEntity.setType("inc");
+                        bookentity.setType("inc");
                     }
                 });
 
@@ -160,7 +165,7 @@ public class bookkeeperFragment extends DialogFragment {
                     public void onClick(View v){
                         as.setText("지출");
                         as.setTextColor(Color.RED);
-                        bookEntity.setType("exp");
+                        bookentity.setType("exp");
                     }
                 });
 
@@ -177,14 +182,17 @@ public class bookkeeperFragment extends DialogFragment {
                 new Button.OnClickListener(){
                     public void onClick(View view){
                         String price = inputPrice.getText().toString();
-                        bookEntity.setValue(price);
-                        bookEntity.setDate(Date);
-
+                        bookentity.setValue(price);
+                        bookentity.setDate(Date);
                         // adding to DB
+                        Log.d(bookentity.getType(),"1");
+
                         dbClient.getInstance(getActivity().getApplicationContext())
                                 .getBookDB()
                                 .bookDAO()
-                                .insertData(bookEntity);
+                                .insertData(bookentity);
+
+                        Log.d(bookentity.getType(),"2");
                         getBEs();
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                         dialog.cancel();
@@ -234,6 +242,33 @@ public class bookkeeperFragment extends DialogFragment {
             @Override
             protected void onPostExecute(List<bookEntity> bookList) {
                 bookkeeperAdapter = new bookkeeperAdapter(bookList, getActivity());
+                bookkeeperAdapter.setItemClick(new bookkeeperAdapter.ItemClick() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("수입/지츨 내역 삭제");
+                        builder.setMessage("정말 삭제하시겠습니까?");
+                        builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                bookEntity deleteBookentity;
+                                dbClient.getInstance(getActivity().getApplicationContext())
+                                        .getBookDB()
+                                        .bookDAO()
+                                        .deleteData(bookkeeperAdapter.getBookList().get(position));
+                                getBEs();
+                                Toast.makeText(getActivity().getApplicationContext(),"삭제완료",Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getActivity().getApplicationContext(),"취소됨",Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        builder.show();
+                    }
+                });
                 bookkeeperRecycler.setAdapter(bookkeeperAdapter);
                 super.onPostExecute(bookList);
                 Log.v("attach executed", "");

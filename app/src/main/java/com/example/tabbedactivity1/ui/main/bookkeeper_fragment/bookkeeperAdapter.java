@@ -22,6 +22,10 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
     private Context mCtx;
     private List<bookEntity> bookList;
 
+    public List<bookEntity> getBookList() {
+        return bookList;
+    }
+
     public bookkeeperAdapter(List<bookEntity> item, Context context) {
         this.mCtx = context;
         this.bookList = item;
@@ -46,6 +50,25 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
         }
     }
 
+    //아이템 클릭시 실행 함수
+    private ItemClick itemClick;
+    public interface ItemClick {
+        public void onClick(View view,int position);
+    }
+
+    //아이템 클릭시 실행 함수 등록 함수
+    public void setItemClick(ItemClick itemClick) {
+        this.itemClick = itemClick;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        View view;
+        public ViewHolder(View view) {
+            super(view);
+            this.view = view;
+        }
+    }
+
      @Override
     public BookHolder onCreateViewHolder(ViewGroup container, int viewType) {
         LayoutInflater inflater = (LayoutInflater) LayoutInflater.from(container.getContext());
@@ -55,7 +78,7 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
 
     @Override
     public void onBindViewHolder(@NonNull final BookHolder holder, final int position) {
-
+        final int Position = position;
         bookEntity be = bookList.get(position);
         if(be.getType()=="inc") {
             holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.cat_icon));
@@ -71,6 +94,15 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
                 +"."+Integer.toString(date%100);
         holder.valueView.setText(be.getValue());
         holder.dateView.setText(strDate);
+
+        holder.background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(itemClick != null){
+                    itemClick.onClick(v, Position);
+                }
+            }
+        });
     }
 
     @Override
