@@ -14,7 +14,7 @@ public class bookEntity {
     private String type;
 
     @ColumnInfo(name="value")
-    private String value;
+    private int value;
 
     @ColumnInfo(name="date")
     private int date;
@@ -28,7 +28,7 @@ public class bookEntity {
         return type;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
@@ -42,8 +42,8 @@ public class bookEntity {
 
     public void setType(String str) { this.type = str; }
 
-    public void setValue(String str) {
-        this.value = str;
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public void setDate(int date) { this.date = date; }

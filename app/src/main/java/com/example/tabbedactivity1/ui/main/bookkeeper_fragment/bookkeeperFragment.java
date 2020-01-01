@@ -43,11 +43,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.view.PieChartView;
+
 public class bookkeeperFragment extends DialogFragment {
 
     RecyclerView bookkeeperRecycler = null;
     bookkeeperAdapter bookkeeperAdapter = null;
     bookDatabase bookDB = null;
+
+    private PieChartView chart;
+    private PieChartData data;
+    private boolean hasLabels = false;
+    private boolean hasLabelsOutside = false;
+    private boolean hasCenterCircle = false;
+    private boolean hasCenterText1 = false;
+    private boolean hasCenterText2 = false;
+    private boolean isExploded = false;
+    private boolean hasLabelForSelected = false;
+
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private PageViewModel pageViewModel;
@@ -79,7 +93,12 @@ public class bookkeeperFragment extends DialogFragment {
         View root = inflater.inflate(R.layout.bookkeeper_fragment, container, false);
         Button add = root.findViewById(R.id.addbutton);
 
-
+        setHasOptionsMenu(true);
+        /*
+        chart = (PieChartView) root.findViewById(R.id.pieChart);
+        chart.setOnValueTouchListener(new ValueTouchListener);
+        generateData();
+         */
 
         //오늘날짜 가져오기
         Date currentTime = Calendar.getInstance().getTime();
@@ -118,6 +137,7 @@ public class bookkeeperFragment extends DialogFragment {
         final LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.custom_dialog, (ViewGroup)getActivity().findViewById( R.id.customdialog));
         final bookEntity bookentity = new bookEntity();
+        List<bookEntity> beList;
 
         //실행코드
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -182,7 +202,7 @@ public class bookkeeperFragment extends DialogFragment {
                 new Button.OnClickListener(){
                     public void onClick(View view){
                         String price = inputPrice.getText().toString();
-                        bookentity.setValue(price);
+                        bookentity.setValue(Integer.valueOf(price));
                         bookentity.setDate(Date);
                         // adding to DB
                         Log.d(bookentity.getType(),"1");
@@ -195,6 +215,7 @@ public class bookkeeperFragment extends DialogFragment {
                         Log.d(bookentity.getType(),"2");
 
                         getBEs();
+
                         Toast.makeText(getActivity().getApplicationContext(),"저장완료",Toast.LENGTH_LONG).show();
                         dialog.cancel();
                     }
@@ -237,9 +258,6 @@ public class bookkeeperFragment extends DialogFragment {
                         .getBookDB()
                         .bookDAO()
                         .getAllBookEntity();
-                for(int i=0;i<bookList.size();i++){
-                    Log.d("type: ",bookList.get(i).getType());
-                }
                 return bookList;
             }
 
@@ -254,7 +272,6 @@ public class bookkeeperFragment extends DialogFragment {
                         builder.setMessage("정말 삭제하시겠습니까?");
                         builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                bookEntity deleteBookentity;
                                 dbClient.getInstance(getActivity().getApplicationContext())
                                         .getBookDB()
                                         .bookDAO()
@@ -273,14 +290,32 @@ public class bookkeeperFragment extends DialogFragment {
                         builder.show();
                     }
                 });
+
                 bookkeeperRecycler.setAdapter(bookkeeperAdapter);
+
+                int balanceVal = getBalance(bookList);
+                TextView balanceView = getActivity().findViewById(R.id.balance);
+                balanceView.setText(Integer.toString(balanceVal));
+
                 super.onPostExecute(bookList);
-                Log.v("attach executed", "");
             }
         }
 
         GetBEs gb = new GetBEs();
         gb.execute();
+    }
+
+    int getBalance(List<bookEntity> bookList) {
+        int len = bookList.size();
+        int balance = 0;
+        for(int i=0; i<len; i++){
+            bookEntity be = bookList.get(i);
+            if(be.getType().equals("inc"))
+                balance += be.getValue();
+            else
+                balance -= be.getValue();
+        }
+        return balance;
     }
 }
 

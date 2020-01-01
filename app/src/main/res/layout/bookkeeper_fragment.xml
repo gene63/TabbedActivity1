@@ -14,7 +14,7 @@
         sothree:umanoPanelHeight="30dp"
         sothree:umanoShadowHeight="4dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -27,25 +27,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/pieChart"
+                app:layout_constraintLeft_toLeftOf="parent"
                 android:text="+"
                 android:textSize="30dp" />
 
-            <ImageView
+            <lecho.lib.hellocharts.view.PieChartView
                 android:id="@+id/pieChart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/fox_bw"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                />
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/addbutton"
+                app:layout_constraintBottom_toTopOf="@id/balance"
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/balance"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/balance" />
+                android:layout_height="100dp"
+                android:text="@string/balance"
+                app:layout_constraintTop_toBottomOf="@id/pieChart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

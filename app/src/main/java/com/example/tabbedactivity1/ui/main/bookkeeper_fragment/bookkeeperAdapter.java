@@ -23,7 +23,7 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
     private List<bookEntity> bookList;
 
     public List<bookEntity> getBookList() {
-        return bookList;
+        return this.bookList;
     }
 
     public bookkeeperAdapter(List<bookEntity> item, Context context) {
@@ -92,7 +92,7 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
         String strDate = Integer.toString(date/10000)
                 +"."+Integer.toString((date%10000)/100)
                 +"."+Integer.toString(date%100);
-        holder.valueView.setText(be.getValue());
+        holder.valueView.setText(Integer.toString(be.getValue()));
         holder.dateView.setText(strDate);
 
         holder.background.setOnClickListener(new View.OnClickListener() {
