@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">TabbedActivity1</string>
+
+    <string name="app_name">BookKeeper</string>
     <string name="tab_text_1">Contacts</string>
     <string name="tab_text_2">Gallery</string>
     <string name="tab_text_3">Book Keeper</string>
@@ -8,4 +9,16 @@
     <string name="empty">No Images on this device</string>
     <string name="balance">100000</string>
     <string name="btitle">Load Contacts</string>
+
+    <string name="spinner_text">분류</string>
+    <string-array name="category_array">
+        <item>식비</item>
+        <item>교통</item>
+        <item>문화</item>
+        <item>주거/통신</item>
+        <item>의료</item>
+        <item>경조/선물</item>
+        <item>기타</item>
+    </string-array>
+
 </resources>

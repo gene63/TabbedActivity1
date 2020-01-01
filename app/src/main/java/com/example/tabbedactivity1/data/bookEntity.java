@@ -19,6 +19,9 @@ public class bookEntity {
     @ColumnInfo(name="date")
     private int date;
 
+    @ColumnInfo(name="category")
+    private String category;
+
     // getter and setter
     public int getUid() {
         return uid;
@@ -36,6 +39,8 @@ public class bookEntity {
         return date;
     }
 
+    public String getCategory() { return category; }
+
     public void setUid(int id) {
         this.uid = id;
     }
@@ -47,5 +52,7 @@ public class bookEntity {
     }
 
     public void setDate(int date) { this.date = date; }
+
+    public void setCategory(String str) { this.category = str; }
 
 }

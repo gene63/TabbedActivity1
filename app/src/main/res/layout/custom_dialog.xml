@@ -57,23 +57,23 @@
         android:layout_marginBottom="20dp"
         android:weightSum="5">
 
-        <TextView
-            android:id="@+id/price"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="금액"
-            android:textSize="15dp"
-            android:gravity="center"/>
+        <Spinner
+            android:id="@+id/category"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/category_array"
+            android:prompt="@string/spinner_text"
+            android:dropDownWidth="wrap_content"
+            android:textSize="10dp"/>
 
         <EditText
             android:id="@+id/inputPrice"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:gravity="center"
             android:hint="금액을 입력하세요"
-            android:textSize="12sp"
-            android:gravity="center"/>
+            android:textSize="12sp" />
     </LinearLayout>
 
 

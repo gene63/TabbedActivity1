@@ -32,7 +32,7 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
     }
 
     public class BookHolder extends RecyclerView.ViewHolder{
-        ImageView imageView;
+        TextView typeView;
         TextView valueView;
         TextView dateView;
         View background;
@@ -40,7 +40,7 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
         BookHolder(View itemView) {
             super(itemView);
 
-            imageView = itemView.findViewById(R.id.inc_exp);
+            typeView = itemView.findViewById(R.id.inc_exp);
             valueView = itemView.findViewById(R.id.value);
             dateView = itemView.findViewById(R.id.date);
             background = itemView.findViewById(R.id.item_backround);
@@ -81,11 +81,11 @@ public class bookkeeperAdapter extends RecyclerView.Adapter<bookkeeperAdapter.Bo
         final int Position = position;
         bookEntity be = bookList.get(position);
         if(be.getType().equals("inc")) {
-            holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.cat_icon));
+            holder.typeView.setText("수입");
             holder.background.setBackground(mCtx.getResources().getDrawable(R.drawable.round_edge_dark));
         }
         else {
-            holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(R.drawable.dog_icon));
+            holder.typeView.setText(be.getCategory());
             holder.background.setBackground(mCtx.getResources().getDrawable(R.drawable.round_edge_light));
         }
         int date = be.getDate();

@@ -4,23 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#583A0C"
+    android:background="#6D3300"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_backround"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="3dp"
+        android:layout_margin="5dp"
         android:background="@drawable/round_edge_light">
 
-        <ImageView
+        <TextView
             android:id="@+id/inc_exp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars[0]" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/value"
@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="right"
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/value"

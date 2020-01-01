@@ -2,23 +2,27 @@ package com.example.tabbedactivity1.ui.main.bookkeeper_fragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.slice.Slice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +41,18 @@ import com.example.tabbedactivity1.data.bookEntity;
 import com.example.tabbedactivity1.data.dbClient;
 import com.example.tabbedactivity1.ui.main.phoneNumber_fragment.PageViewModel;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
 
 public class bookkeeperFragment extends DialogFragment {
@@ -54,13 +63,6 @@ public class bookkeeperFragment extends DialogFragment {
 
     private PieChartView chart;
     private PieChartData data;
-    private boolean hasLabels = false;
-    private boolean hasLabelsOutside = false;
-    private boolean hasCenterCircle = false;
-    private boolean hasCenterText1 = false;
-    private boolean hasCenterText2 = false;
-    private boolean isExploded = false;
-    private boolean hasLabelForSelected = false;
 
 
     private static final String ARG_SECTION_NUMBER = "section_number";
@@ -73,6 +75,14 @@ public class bookkeeperFragment extends DialogFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
+
+    int[] colors = {Color.parseColor("#E74C3C")
+            , Color.parseColor("#E67E22")
+            , Color.parseColor("#F1C40F")
+            , Color.parseColor("#2ECC71")
+            , Color.parseColor("#1ABC9C")
+            , Color.parseColor("#3498D8")
+            , Color.parseColor("#9B59B6")};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,11 +104,8 @@ public class bookkeeperFragment extends DialogFragment {
         Button add = root.findViewById(R.id.addbutton);
 
         setHasOptionsMenu(true);
-        /*
+
         chart = (PieChartView) root.findViewById(R.id.pieChart);
-        chart.setOnValueTouchListener(new ValueTouchListener);
-        generateData();
-         */
 
         //오늘날짜 가져오기
         Date currentTime = Calendar.getInstance().getTime();
@@ -117,11 +124,15 @@ public class bookkeeperFragment extends DialogFragment {
         });
 
 
+
+
         return root;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+
+
         // database instance
         bookDB = Room.databaseBuilder(this.getContext(),
                 bookDatabase.class,
@@ -156,9 +167,6 @@ public class bookkeeperFragment extends DialogFragment {
 
         TextView date = (TextView)view.findViewById(R.id.date);
         date.setText(repDate);
-        final TextView as = (TextView)view.findViewById(R.id.price);
-        as.setText("지출");
-        as.setTextColor(Color.parseColor("#FF0000"));
         bookentity.setType("exp");
 
         final EditText inputPrice = (EditText)view.findViewById(R.id.inputPrice);
@@ -167,14 +175,14 @@ public class bookkeeperFragment extends DialogFragment {
         Button yes = (Button)view.findViewById(R.id.yesbutton);
         Button no = (Button)view.findViewById(R.id.nobutton);
 
+        final Spinner spinner = (Spinner)view.findViewById((R.id.category));
+
         //클릭했을 때 실행되는 매서드
 
         inc.setOnClickListener(
                 new Button.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        as.setText("수입");
-                        as.setTextColor(Color.BLUE);
                         bookentity.setType("inc");
                     }
                 });
@@ -183,8 +191,6 @@ public class bookkeeperFragment extends DialogFragment {
                 new Button.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        as.setText("지출");
-                        as.setTextColor(Color.RED);
                         bookentity.setType("exp");
                     }
                 });
@@ -202,8 +208,10 @@ public class bookkeeperFragment extends DialogFragment {
                 new Button.OnClickListener(){
                     public void onClick(View view){
                         String price = inputPrice.getText().toString();
+                        String category = spinner.getSelectedItem().toString();
                         bookentity.setValue(Integer.valueOf(price));
                         bookentity.setDate(Date);
+                        bookentity.setCategory(category);
                         // adding to DB
                         Log.d(bookentity.getType(),"1");
 
@@ -293,9 +301,15 @@ public class bookkeeperFragment extends DialogFragment {
 
                 bookkeeperRecycler.setAdapter(bookkeeperAdapter);
 
-                int balanceVal = getBalance(bookList);
+                int[] balanceList = getBalance(bookList);
+                int sumBalance = getSum(balanceList);
+                List<SliceValue> SVList = getSVList(balanceList);
                 TextView balanceView = getActivity().findViewById(R.id.balance);
-                balanceView.setText(Integer.toString(balanceVal));
+                balanceView.setText(Integer.toString(sumBalance));
+                data = new PieChartData(SVList);
+                data.setHasCenterCircle(true);
+                data.setHasLabels(true);
+                chart.setPieChartData(data);
 
                 super.onPostExecute(bookList);
             }
@@ -305,17 +319,60 @@ public class bookkeeperFragment extends DialogFragment {
         gb.execute();
     }
 
-    int getBalance(List<bookEntity> bookList) {
+    int[] getBalance(List<bookEntity> bookList) {
         int len = bookList.size();
-        int balance = 0;
+        int[] sum = {0, 0, 0, 0, 0, 0, 0, 0};
         for(int i=0; i<len; i++){
             bookEntity be = bookList.get(i);
-            if(be.getType().equals("inc"))
-                balance += be.getValue();
-            else
-                balance -= be.getValue();
+            if(be.getType().equals("inc")){
+                sum[7] += be.getValue();
+            }
+            else{
+                switch(be.getCategory()){
+                    case "식비":
+                        sum[0] += be.getValue();
+                        break;
+                    case "교통":
+                        sum[1] += be.getValue();
+                        break;
+                    case "문화":
+                        sum[2] += be.getValue();
+                        break;
+                    case "주거/통신":
+                        sum[3] += be.getValue();
+                        break;
+                    case "의료":
+                        sum[4] += be.getValue();
+                        break;
+                    case "경조/선물":
+                        sum[5] += be.getValue();
+                        break;
+                    case "기타":
+                        sum[6] += be.getValue();
+                        break;
+                }
+            }
         }
-        return balance;
+        return sum;
+    }
+
+    int getSum(int[] arr){
+        int len = arr.length;
+        int sum = 0;
+        for(int i=0; i<(len-1); i++){
+            sum -= arr[i];
+        }
+        sum += arr[len-1];
+        return sum;
+    }
+
+    List<SliceValue> getSVList(int[] arr){
+        List<SliceValue> SVList = new ArrayList<SliceValue>();
+        for(int i=0; i<7; i++){
+            SliceValue sv = new SliceValue((float)arr[i], colors[i]);
+            SVList.add(sv);
+        }
+        return SVList;
     }
 }
 
