@@ -175,6 +175,9 @@ public class bookkeeperFragment extends DialogFragment {
         Button yes = (Button)view.findViewById(R.id.yesbutton);
         Button no = (Button)view.findViewById(R.id.nobutton);
 
+        inc.setBackgroundColor(Color.WHITE);
+        exp.setBackgroundColor(Color.parseColor("#FF9801"));
+
         final Spinner spinner = (Spinner)view.findViewById((R.id.category));
 
         //클릭했을 때 실행되는 매서드
@@ -184,6 +187,10 @@ public class bookkeeperFragment extends DialogFragment {
                     @Override
                     public void onClick(View v){
                         bookentity.setType("inc");
+                        inc.setBackgroundColor(Color.parseColor("#FF9801"));
+                        exp.setBackgroundColor(Color.WHITE);
+                        spinner.setEnabled(false);
+                        spinner.setClickable(false);
                     }
                 });
 
@@ -192,6 +199,10 @@ public class bookkeeperFragment extends DialogFragment {
                     @Override
                     public void onClick(View v){
                         bookentity.setType("exp");
+                        inc.setBackgroundColor(Color.WHITE);
+                        exp.setBackgroundColor(Color.parseColor("#FF9801"));
+                        spinner.setEnabled(true);
+                        spinner.setClickable(true);
                     }
                 });
 
